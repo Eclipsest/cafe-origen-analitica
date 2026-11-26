@@ -1,10 +1,15 @@
 const ventas = require("./datos.js");
 const a = require("./analitica");
 
+function verificar(nombre, condicion) {
+    console.log(`${nombre}: ${condicion ? "OK" : "DIFERENTE"}`);
+    if (!condicion) process.exitCode = 1;
+}
+
 function comparar(nombre, conCiclo, conMetodos) {
-    console.log(
-        `${nombre}: ${conCiclo === conMetodos ? "OK" : "DIFERENTE"}`,
-        `(ciclo=${conCiclo}, métodos=${conMetodos})`
+    verificar(
+        `${nombre} (ciclo=${conCiclo}, métodos=${conMetodos})`,
+        conCiclo === conMetodos
     );
 }
 
@@ -26,4 +31,25 @@ a.topProductosPorValor(ventas, 3);
 a.totalPorCiudad(ventas);
 a.unidadesPorProducto(ventas);
 const idsDespues = ventas.map((v) => v.id).join(",");
-console.log("\nOrden original intacto:", idsAntes === idsDespues ? "OK" : "DIFERENTE");
+verificar("Orden original intacto", idsAntes === idsDespues);
+
+const ventasBogota = [
+    { ciudad: "Bogotá", cantidad: 1, precio: 1000 },
+    { ciudad: "Bogotá ", cantidad: 2, precio: 1000 },
+];
+const bogotaAgrupada = a.totalPorCiudad(ventasBogota);
+verificar(
+    "Bogotá y Bogotá con espacio quedan en un grupo",
+    Object.keys(bogotaAgrupada).length === 1 && bogotaAgrupada.bogotá === 3000
+);
+
+const diaConVentas = a.ventasDelDia(ventas, "2026-09-01");
+verificar("ventasDelDia encuentra ventas", diaConVentas.length === 2);
+
+const diaSinVentas = a.ventasDelDia(ventas, "2026-09-07");
+verificar(
+    "ticketPromedio de un día sin ventas es 0, no NaN",
+    diaSinVentas.length === 0 &&
+        a.ticketPromedio(diaSinVentas) === 0 &&
+        !Number.isNaN(a.ticketPromedio(diaSinVentas))
+);

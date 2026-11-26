@@ -42,6 +42,10 @@ function ventasPorCiudad(ventas, ciudad) {
     return total;
 }
 
+function ventasDelDia(ventas, fecha) {
+    return ventas.filter((v) => v.fecha === fecha);
+}
+
 const totalVendidoM = (ventas) =>
     ventas.reduce((acc, v) => acc + valorVenta(v), 0);
 
@@ -92,6 +96,7 @@ module.exports = {
     ventaMayor,
     ticketPromedio,
     ventasPorCiudad,
+    ventasDelDia,
     totalVendidoM,
     unidadesVendidasM,
     ventasPorCiudadM,
